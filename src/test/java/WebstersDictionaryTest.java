@@ -25,10 +25,10 @@ public class WebstersDictionaryTest {
 
     @Test
     public void testRetrievalOfElements() throws Exception {
-        Assert.assertTrue( dictCaseSensitive.stream().collect(Collectors.toSet()).contains("Ababdeh"));
-        Assert.assertTrue( dictCaseSensitive.stream().collect(Collectors.toSet()).contains("Ababua"));
-        Assert.assertFalse( dictCaseSensitive.stream().collect(Collectors.toSet()).contains("Ababddeh"));
-        Assert.assertFalse( dictCaseSensitive.stream().collect(Collectors.toSet()).contains("Abaabua"));
+        Assert.assertTrue(dictCaseSensitive.stream().collect(Collectors.toSet()).contains("Ababdeh"));
+        Assert.assertTrue(dictCaseSensitive.stream().collect(Collectors.toSet()).contains("Ababua"));
+        Assert.assertFalse(dictCaseSensitive.stream().collect(Collectors.toSet()).contains("Ababddeh"));
+        Assert.assertFalse(dictCaseSensitive.stream().collect(Collectors.toSet()).contains("Abaabua"));
 
     }
 
@@ -78,5 +78,16 @@ public class WebstersDictionaryTest {
 
     }
 
+    @Test
+    public void testGetSubsetDictionary() throws Exception {
+        int lengthFilteredWords = 3;
+        WebstersDictionary newDictionary = dictCaseSensitive.getSubsetDictionary(lengthFilteredWords);
+
+        System.out.println(newDictionary);
+
+        for (String s : newDictionary.getDictionary()) {
+            Assert.assertEquals(lengthFilteredWords, s.length());
+        }
+    }
 
 }

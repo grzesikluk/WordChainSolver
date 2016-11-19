@@ -12,6 +12,10 @@ import java.util.stream.Stream;
  */
 public class WebstersDictionary {
 
+    public Set<String> getDictionary() {
+        return dictionary;
+    }
+
     private Set<String> dictionary;
     private String fileName;
     private boolean caseSensitive;
@@ -31,6 +35,12 @@ public class WebstersDictionary {
         this.caseSensitive = isCaseSensitive;
 
         retrieveDictionaryFromFile(fileName);
+    }
+
+    WebstersDictionary(WebstersDictionary dict) {
+        this.fileName = "unnamed";
+        this.caseSensitive = dict.isCaseSensitive();
+        this.dictionary = dict.getDictionary();
     }
 
     private void retrieveDictionaryFromFile(String fName) {
@@ -122,6 +132,18 @@ public class WebstersDictionary {
         }
         return nextStepSet;
 
+    }
+
+
+    /**
+     * Create subset dictionary. This subset contains only words with given length.
+     *
+     * @return
+     */
+    WebstersDictionary getSubsetDictionary(int wordLength)  {
+        WebstersDictionary newDictionary = new WebstersDictionary(this);
+        newDictionary.dictionary = this.getDictionary().stream().filter(s->s.length()==wordLength).collect(Collectors.toSet());
+        return newDictionary;
     }
 
 }

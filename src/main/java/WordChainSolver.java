@@ -24,7 +24,7 @@ public class WordChainSolver {
             if (args.length == 3)
                 fName = args[2];
 
-            WordChainSolver solver = new WordChainSolver(new WebstersDictionary(fName,false));
+            WordChainSolver solver = new WordChainSolver(new WebstersDictionary(fName,false).getSubsetDictionary(inputWord.length()));
             System.out.println(solver.getWordChains(inputWord, outputWord));
 
 

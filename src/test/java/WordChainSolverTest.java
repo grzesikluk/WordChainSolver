@@ -90,4 +90,5 @@ public class WordChainSolverTest {
         Assert.assertNull(solver.getWordChains("load","$$$$"));
 
     }
+
 }
