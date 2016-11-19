@@ -42,3 +42,23 @@ algorithm:
 5) otherwise go to #2
 
 This naturally sounds like recursive generator.
+
+-------- My last comment on solution
+I'm really suprised how much time this search takes. It takes minutes to report some chains of words. I did some obvious
+optimisation on dictionary, limiting the dictionary to be searched to only words of given length, but still this program
+takes a lot and reporting of all possible solutions - and will take much time.
+The next step for optimise I guess would be limiting the length of the word chain to some limit - but this will result
+in reporting not all of possible combinations. After some consideration I have added this possibility to do some research
+on the complexity of this problem.
+
+For "load" to "gold":
+- only one 3 word solution
+- 8 solutions for 4 word chain
+- 69 solutions on 5 word chain
+
+So we can see that the amount of solutions increases a lot!
+
+This problem is even more interesting when removing the limit of word length fix - this will mean that from one word to
+another we can go by adding or removing, not only changing chars.
+
+I like this problem a lot and enjoyed to solve it! :)

@@ -13,6 +13,7 @@ import java.util.Set;
 public class WordChainSolverTest {
     private static String dictionaryFileName = "src\\main\\resources\\testdictionary.txt";
     private WordChainSolver solver;
+    private boolean isCaseSensitive = false;
 
     private LinkedList<String> getLinedListForTest(String... str) {
         LinkedList<String> result = new LinkedList<>();
@@ -28,7 +29,7 @@ public class WordChainSolverTest {
 
     @Before
     public void init() throws Exception {
-        solver = new WordChainSolver(new WebstersDictionary(dictionaryFileName, false));
+        solver = new WordChainSolver(new WebstersDictionary(dictionaryFileName, isCaseSensitive));
     }
 
 
@@ -75,7 +76,7 @@ public class WordChainSolverTest {
     @Test
     public void testGetWordChainsRecursiveFunctionOneWordLoadGoat() throws Exception {
         Set<List<String>> outputSet = getSetForTest();
-        Assert.assertEquals(outputSet,solver.getWordChains("load","goat"));
+        Assert.assertNull(solver.getWordChains("load","goat"));
 
     }
 

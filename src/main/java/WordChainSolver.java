@@ -8,89 +8,99 @@ import java.util.Set;
  */
 public class WordChainSolver {
 
+    private int limitChainLength = 0;
     private WebstersDictionary dictionary;
-    private static final String fileName = "src\\main\\resources\\websters-dictionary.txt";
-    private Set<List<String>> solutonSet;
     private boolean isCaseSensitive;
 
-    public static void main(String[] args) {
 
-        if (args.length >= 2) {
-
-            String inputWord = args[0];
-            String outputWord = args[1];
-            String fName = fileName;
-
-            if (args.length == 3)
-                fName = args[2];
-
-            WordChainSolver solver = new WordChainSolver(new WebstersDictionary(fName,false).getSubsetDictionary(inputWord.length()));
-            System.out.println(solver.getWordChains(inputWord, outputWord));
-
-
-        } else {
-            System.err.println("Invalid parameters list \n\tUsage:\n\tWordChainSolver inputWord outputWord [dictionaryFile]");
-        }
-
-    }
-
-
+    /**
+     * Initialize solver. The case sensitivity is derived from dictionary.
+     *
+     * @param dict
+     */
     WordChainSolver(WebstersDictionary dict) {
-        dictionary = dict;
-        solutonSet = new HashSet<>();
+        this.dictionary = dict;
+        this.isCaseSensitive = dict.isCaseSensitive();
+        this.limitChainLength = 0;
     }
 
-    public boolean isCaseSensitive() {
-        return isCaseSensitive;
+    /**
+     * Initialize solver. The case sensitivity is derived from dictionary.
+     *
+     * @param dict
+     */
+    WordChainSolver(WebstersDictionary dict, int limitChainLen) {
+        this.dictionary = dict;
+        this.isCaseSensitive = dict.isCaseSensitive();
+        this.limitChainLength = limitChainLen;
     }
 
-    public void setCaseSensitive(boolean caseSensitive) {
-        isCaseSensitive = caseSensitive;
-    }
-
-
+    /**
+     * Get all chains of words leading from input word to output word.
+     * Restriction: input word must be the same length as output word,.
+     *
+     * @param inputWord
+     * @param outputWord
+     * @return set of all chains if any, null - if none
+     */
     public Set<List<String>> getWordChains(String inputWord, String outputWord) {
+
+        Set<List<String>> solutonSet = new HashSet<>();
 
         if (inputWord.length() != outputWord.length())
             throw new IllegalArgumentException();
 
         else {
 
-            if (inputWord.equals(outputWord) || ! dictionary.contains(inputWord) || !dictionary.contains(outputWord)) {
+            if (inputWord.equals(outputWord) || !dictionary.contains(inputWord) || !dictionary.contains(outputWord)) {
                 return null;
             }
 
+            /* Progress with searching */
             LinkedList<String> startList = new LinkedList<String>();
             startList.add(inputWord);
 
-            solutonSet.clear();
-            getWordChainsRecursiveFunction(startList, outputWord);
+            getWordChainsRecursiveFunction(startList, outputWord, solutonSet);
 
         }
 
         return solutonSet;
     }
 
-    public void getWordChainsRecursiveFunction(LinkedList<String> inputChain, String outputWord) {
 
-        Set<String> nextWordsSet = dictionary.getNextWordsSet(inputChain);
+    /**
+     * Recursive search of word chains from input to output word.
+     *
+     * @param inputChain - existing chain which determines what will be searched and what will be excluded from search
+     * @param outputWord - last word in the chain
+     * @param solutonSet - solutions found will be added to this set.
+     */
+    public void getWordChainsRecursiveFunction(LinkedList<String> inputChain, String outputWord, Set<List<String>> solutonSet) {
 
-        if (nextWordsSet.isEmpty()) {
-            //end condition - no chain finished by outputString
+        if (limitChainLength > 0 && inputChain.size() >= limitChainLength)
+            /*This condition means - limit the solution set to maximum limitChainLength*/
             return;
-        } else {
+        else {
 
-            for (String nextWord : nextWordsSet) {
+            Set<String> nextWordsSet = dictionary.getNextWordsSet(inputChain);
 
-                LinkedList<String> updatedInputChain = new LinkedList<>(inputChain);
-                updatedInputChain.add(nextWord);
+            if (nextWordsSet.isEmpty()) {
+                //end condition - no chain finished by outputString
+                return;
+            } else {
 
-                if (compareWords(nextWord,outputWord)) {
-                    System.out.println(updatedInputChain);
-                    solutonSet.add(updatedInputChain); //build solution set
+                for (String nextWord : nextWordsSet) {
 
-                } else {
-                    getWordChainsRecursiveFunction(updatedInputChain, outputWord);
+                    LinkedList<String> updatedInputChain = new LinkedList<>(inputChain);
+                    updatedInputChain.add(nextWord);
+
+                    if (compareWords(nextWord, outputWord)) {
+                        System.out.println(updatedInputChain); //this is printed because this algo takes a while
+                        solutonSet.add(updatedInputChain); //build solution set
+
+                    } else {
+                        getWordChainsRecursiveFunction(updatedInputChain, outputWord, solutonSet);
+                    }
                 }
             }
         }
@@ -98,7 +108,7 @@ public class WordChainSolver {
     }
 
     private boolean compareWords(String oneWord, String otherWord) {
-        if(isCaseSensitive())
+        if (isCaseSensitive)
             return oneWord.equals(otherWord);
         else
             return oneWord.toLowerCase().equals(otherWord.toLowerCase());
